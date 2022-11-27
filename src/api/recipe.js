@@ -2,8 +2,7 @@ import * as api from './api.js';
 
 const endpoints = {
     recipes: '/data/recipes',
-    recent: '/data/recipes',
-    myItems: (userId) => `/data/catalog?where=_ownerId%3D%22${userId}%22`,
+    recent: '/data/recipes?select=_id%2Cname%2Cimg&sortBy=_createdOn%20desc&pageSize=3',
     create: '/data/catalog',
     edit: '/data/catalog/',
     delete: '/data/catalog/',
@@ -13,16 +12,12 @@ export async function getAll() {
     return api.get(endpoints.recipes);
 }
 
-async function getRecent() {
+export async function getRecent() {
     return api.get(endpoints.recent);
 }
 
 export async function getItemDetails(id) {
     return api.get(endpoints.byId + id);
-}
-
-export async function getMyItems(userId) {
-    return api.get(endpoints.myItems(userId));
 }
 
 export async function createItem(data) {

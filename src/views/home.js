@@ -33,7 +33,7 @@ ${i != 2 ? html`<div class="recent-space"></div>` : nothing}`;
 
 export async function homePage(ctx) {
     ctx.render(html`<p>Loading &hellip;</p>`)
-    const recipes = await recipeService.getAll();
+    const recipes = await recipeService.getRecent();
     ctx.render(homeTemplate(recipes));
 
 }
