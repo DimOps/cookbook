@@ -1,3 +1,6 @@
+const userLinks = document.getElementById('user'); 
+const guestLinks = document.getElementById('guest'); 
+
 const links = {
     '/catalog': document.getElementById('catalogLink'),
     '/create': document.getElementById('createLink'),
@@ -11,5 +14,14 @@ export function updateNav(ctx, next) {
     if (current) {
         current.classList.add('active');
     }
+
+    if (ctx.user) {
+        userLinks.style.display = 'inline-block';
+        guestLinks.style.display = 'none';
+    } else {
+        userLinks.style.display = 'none';
+        guestLinks.style.display = 'inline-block';
+    }
+
     next();
 }
