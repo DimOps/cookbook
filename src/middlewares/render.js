@@ -1,7 +1,12 @@
 import { render } from "../bundler.js"; 
 
+const root = document.querySelector('main');
+
+function Renderer (content) {
+    render(content, root);
+}
+
 export function decorateContext(ctx, next) {
-    const root = document.querySelector('main');
-    ctx.render = (content) => render(content, root);
+    ctx.render = Renderer;
     next();
 }
