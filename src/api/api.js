@@ -1,4 +1,4 @@
-import { clearUserData, getUserData, setUserData } from "../utils";
+import { clearUserData, getUserData, setUserData } from "../utils.js";
 
 const host = 'http://localhost:3030';
 
