@@ -1,5 +1,6 @@
 import { page } from './bundler.js';
 import { updateNav } from './middlewares/navbar.js';
+import { preload } from './middlewares/preload.js';
 import { decorateContext } from './middlewares/render.js';
 import { addSession } from './middlewares/session.js';
 
@@ -17,7 +18,7 @@ page(updateNav);
 page(decorateContext);
 page('/', homePage);
 page('/catalog', catalogPage);
-page('/details/:id', detailsPage);
+page('/details/:id',preload, detailsPage);
 page('/login', loginPage);
 page('/register', registerPage);
 page('/create', createPage);

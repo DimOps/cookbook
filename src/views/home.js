@@ -23,7 +23,7 @@ const homeTemplate = (recipes) => html`
 `;
 
 const recipeTemplate = (recipe, i) => html`
-<a class="card" href="/catalog/${recipe._id}">
+<a class="card" href="/details/${recipe._id}">
     <article class="recent">
         <div class="recent-preview"><img src=${recipe.img}></div>
         <div class="recent-title">${recipe.name}</div>

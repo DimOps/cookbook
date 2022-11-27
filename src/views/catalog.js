@@ -1,4 +1,4 @@
-import { html, nothing } from '../bundler.js';
+import { html } from '../bundler.js';
 import * as recipeService from '../api/recipe.js'
 
 const catalogTemplate = (recipes) => html`
