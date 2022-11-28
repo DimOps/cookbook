@@ -1,6 +1,7 @@
 import { html, nothing } from '../bundler.js';
+import  * as recipeService from '../api/recipe.js';
 
-const detailsTemplate = (recipe) => html`
+const detailsTemplate = (recipe, onDelete) => html`
 <section id="details">
     <article>
         <h2>${recipe.name}</h2>
@@ -19,7 +20,7 @@ const detailsTemplate = (recipe) => html`
         </div>
         ${recipe._isOwner ? html`<div class="controls">
             <a class="actionLink" href="/edit/${recipe._id}">✎ Edit</a>
-            <a class="actionLink" href="javascript:void(0)">✖ Delete</a>
+            <a  @click=${onDelete} class="actionLink" href="javascript:void(0)">✖ Delete</a>
         </div>` : nothing};
         
     </article>
@@ -29,6 +30,13 @@ const detailsTemplate = (recipe) => html`
 
 export async function detailsPage(ctx) {
     const recipe = ctx.recipe;
-    ctx.render(detailsTemplate(recipe));
+    ctx.render(detailsTemplate(recipe, onDelete));
 
+    async function onDelete() {
+        const choice = confirm('Are you sure you want to delete this?');
+        if (choice){
+            await recipeService.deleteItem(ctx.params.id);
+            ctx.page.redirect('/');
+        }
+    }
 }
