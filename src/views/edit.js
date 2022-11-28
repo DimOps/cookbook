@@ -1,23 +1,40 @@
 import { html } from '../bundler.js';
+import { createSubmitHandler } from '../utils.js';
+import  * as recipeService from '../api/recipe.js';
 
-const editTemplate = () => html`
+const editTemplate = (data, onSubmit) => html`
 <section id="edit">
     <article>
         <h2>Edit Recipe</h2>
-        <form id="editForm">
-        <input type="hidden" name="_id" value="3987279d-0ad4-4afb-8ca9-5b256ae3b298">
-            <label>Name: <input type="text" name="name" placeholder="Recipe name"></label>
-            <label>Image: <input type="text" name="img" placeholder="Image URL"></label>
-            <label class="ml">Ingredients: <textarea name="ingredients" placeholder="Enter ingredients on separate lines"></textarea></label>
-            <label class="ml">Preparation: <textarea name="steps" placeholder="Enter preparation steps on separate lines"></textarea></label>
+        <form @submit=${onSubmit} id="editForm">
+        <input type="hidden" name="_id" .value="${data._id}">
+            <label>Name: <input type="text" name="name" placeholder="Recipe name" .value="${data.name}"></label>
+            <label>Image: <input type="text" name="img" placeholder="Image URL" .value="${data.img}"></label>
+            <label class="ml">Ingredients: <textarea name="ingredients" placeholder="Enter ingredients on separate lines" .value="${data.ingredients}"></textarea></label>
+            <label class="ml">Preparation: <textarea name="steps" placeholder="Enter preparation steps on separate lines" .value="${data.steps}"></textarea></label>
             <input type="submit" value="Save Changes">
         </form>
     </article>
 </section>
 `;
 
-export function editPage(ctx) {
-    
-    ctx.render(editTemplate());
+export async function editPage(ctx) {
+    const recipeObj = await recipeService.getItemDetails(ctx.params.id);
+    recipeObj.ingredients = recipeObj.ingredients.join('\n');
+    recipeObj.steps = recipeObj.steps.join('\n');
+    ctx.render(editTemplate(recipeObj, createSubmitHandler(ctx, onSubmit)));
 
+}
+
+async function onSubmit(ctx, data, e) {
+
+    const recipeObj = await recipeService.editItem(ctx.params.id, {
+        name: data.name,
+        img: data.img,
+        ingredients: data.ingredients.split('\n').map(ing => ing.trim()).filter(ing => ing != ''),
+        steps: data.steps.split('\n').map(s => s.trim()).filter(s => s != ''),
+    });
+    
+    e.target.reset();
+    ctx.page.redirect(`/details/${recipeObj._id}`)
 }
