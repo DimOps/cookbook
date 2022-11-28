@@ -1,3 +1,4 @@
+import { logout } from './api/user.js';
 import { page } from './bundler.js';
 import { updateNav } from './middlewares/navbar.js';
 import { preload } from './middlewares/preload.js';
@@ -13,6 +14,10 @@ import { homePage } from './views/home.js';
 import { loginPage } from './views/login.js';
 import { registerPage } from './views/register.js';
 
+
+document.getElementById('logoutBtn').addEventListener('click', onLogout)
+
+
 page(addSession);
 page(updateNav);
 page(decorateContext);
@@ -27,4 +32,7 @@ page('/edit/:id', editPage);
 page.start();
 
 
-
+async function onLogout () {
+    logout();
+    page.redirect('/');
+}
