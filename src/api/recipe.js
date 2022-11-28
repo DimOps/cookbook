@@ -1,7 +1,10 @@
 import * as api from './api.js';
 
+const pageSize = 3;
+
 const endpoints = {
-    recipes: '/data/recipes',
+    recipes: `/data/recipes?sortBy=_createdOn%20desc&pageSize=${pageSize}&offset=`,
+    count: '/data/recipes?count',
     recent: '/data/recipes?select=_id%2Cname%2Cimg&sortBy=_createdOn%20desc&pageSize=3',
     byId: '/data/recipes/',
     create: '/data/recipes',
@@ -9,8 +12,13 @@ const endpoints = {
     delete: '/data/recipes/',
 }
 
-export async function getAll() {
-    return api.get(endpoints.recipes);
+export async function getAll(page = 1) {
+    const [recipes, count] = await Promise.all([
+        api.get(endpoints.recipes + (page - 1) * pageSize),
+        api.get(endpoints.count)
+    ])
+    const pageCount = Math.ceil(count / pageSize); 
+    return {recipes, pageCount};
 }
 
 export async function getRecent() {

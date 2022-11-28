@@ -1,7 +1,8 @@
-import { html } from '../bundler.js';
+import { html, nothing } from '../bundler.js';
 import * as recipeService from '../api/recipe.js'
+import { parseQuerystring } from '../utils.js';
 
-const catalogTemplate = (recipes) => html`
+const catalogTemplate = (recipes, page, pageCount) => html`
 <section id="catalog">
     <div class="section-title">
         <form id="searchForm">
@@ -10,15 +11,16 @@ const catalogTemplate = (recipes) => html`
         </form>
     </div>
     <header class="section-title"> 
-        Page 1 of 1 
-        <a class="pager" href="#">&lt;Prev</a>
-        <a class="pager" href="#">Next&gt;</a>
+        Page ${page} of ${pageCount}
+        ${Number(page) != 1 ? html`<a class="pager" href="/catalog?page=${page - 1}">&lt;Prev</a>` : nothing}
+        ${Number(page) < pageCount ? html`<a class="pager" href="/catalog?page=${page + 1}">Next&gt;</a>` : nothing}
+        
     </header>
     
     ${recipes.map(previewTempalte)}
     
 
-    <footer class="section-title"> Page 1 of 1 </footer>
+    <footer class="section-title"> Page ${page} of ${pageCount} </footer>
 </section>
 `;
 
@@ -33,11 +35,15 @@ const previewTempalte = (recipe) => html`
 </a>
 `;
 
-
-
 export async function catalogPage(ctx) {
+
     ctx.render(html`<p>Loading &hellip;</p>`)
-    const recipes = await recipeService.getAll();
-    ctx.render(catalogTemplate(recipes));
+
+    const query = parseQuerystring(ctx.querystring);
+    const page = Number(query.page) || 1;
+
+    const {recipes, pageCount} = await recipeService.getAll(page);
+
+    ctx.render(catalogTemplate(recipes, page, pageCount));
 
 }
