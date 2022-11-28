@@ -1,10 +1,12 @@
 import { html } from '../bundler.js';
+import { createSubmitHandler } from '../utils.js';
+import  * as recipeService from '../api/recipe.js';
 
-const createTemplate = () => html`
+const createTemplate = (onSubmit) => html`
 <section id="create">
     <article>
         <h2>New Recipe</h2>
-        <form id="createForm">
+        <form @submit=${onSubmit} id="createForm">
             <label>Name: <input type="text" name="name" placeholder="Recipe name"></label>
             <label>Image: <input type="text" name="img" placeholder="Image URL"></label>
             <label class="ml">Ingredients: <textarea name="ingredients"
@@ -19,6 +21,19 @@ const createTemplate = () => html`
 
 export function createPage(ctx) {
     
-    ctx.render(createTemplate());
+    ctx.render(createTemplate(createSubmitHandler(ctx, onSubmit)));
 
+}
+
+async function onSubmit(ctx, data, e) {
+
+    const recipeObj = await recipeService.createItem({
+        name: data.name,
+        img: data.img,
+        ingredients: data.ingredients.split('\n').map(ing => ing.trim()).filter(ing => ing != ''),
+        steps: data.steps.split('\n').map(s => s.trim()).filter(s => s != ''),
+    });
+    
+    e.target.reset();
+    ctx.page.redirect(`/details/${recipeObj._id}`)
 }

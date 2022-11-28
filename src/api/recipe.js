@@ -4,9 +4,9 @@ const endpoints = {
     recipes: '/data/recipes',
     recent: '/data/recipes?select=_id%2Cname%2Cimg&sortBy=_createdOn%20desc&pageSize=3',
     byId: '/data/recipes/',
-    create: '/data/catalog',
-    edit: '/data/catalog/',
-    delete: '/data/catalog/',
+    create: '/data/recipes',
+    edit: '/data/recipes/',
+    delete: '/data/recipes/',
 }
 
 export async function getAll() {
