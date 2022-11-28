@@ -9,7 +9,12 @@ const catalogTemplate = (recipes) => html`
             <input type="submit" value="Search">
         </form>
     </div>
-    <header class="section-title"> Page 1 of 1 </header>
+    <header class="section-title"> 
+        Page 1 of 1 
+        <a class="pager" href="#">&lt;Prev</a>
+        <a class="pager" href="#">Next&gt;</a>
+    </header>
+    
     ${recipes.map(previewTempalte)}
     
 
