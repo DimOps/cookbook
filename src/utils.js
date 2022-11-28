@@ -17,6 +17,6 @@ export function createSubmitHandler (ctx, handler) {
         e.preventDefault();
         const formData = Object.fromEntries(new FormData(e.target));
 
-        handler(ctx, formData)
+        handler(ctx, formData, e)
     };
 }
