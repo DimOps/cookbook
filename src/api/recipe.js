@@ -5,6 +5,7 @@ const pageSize = 3;
 const endpoints = {
     recipes: `/data/recipes?sortBy=_createdOn%20desc&pageSize=${pageSize}&offset=`,
     count: '/data/recipes?count',
+    search: '/data/recipes?where=',
     recent: '/data/recipes?select=_id%2Cname%2Cimg&sortBy=_createdOn%20desc&pageSize=3',
     byId: '/data/recipes/',
     create: '/data/recipes',
@@ -12,12 +13,22 @@ const endpoints = {
     delete: '/data/recipes/',
 }
 
-export async function getAll(page = 1) {
+export async function getAll(page = 1, search) {
+    let urlRecipes = endpoints.recipes + ((page - 1) * pageSize);
+    let urlCount = endpoints.count;
+
+    if (search) {
+        urlRecipes += '&where=' + encodeURIComponent(`name like "${search}"`);
+        urlCount += '&where=' + encodeURIComponent(`name like "${search}"`);    
+    }
+
     const [recipes, count] = await Promise.all([
-        api.get(endpoints.recipes + (page - 1) * pageSize),
-        api.get(endpoints.count)
+        api.get(urlRecipes),
+        api.get(urlCount)
     ])
+
     const pageCount = Math.ceil(count / pageSize); 
+
     return {recipes, pageCount};
 }
 

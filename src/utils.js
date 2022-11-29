@@ -22,7 +22,5 @@ export function createSubmitHandler (ctx, handler) {
 }
 
 export function parseQuerystring (query='') {
-    return Object.fromEntries(query
-        .split('&')
-        .map(kvp => kvp.split('=')));
+    return Object.fromEntries(query.split('&').map(kvp => kvp.split('=')))
 }

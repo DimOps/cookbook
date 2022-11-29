@@ -1,12 +1,13 @@
 import { html, nothing } from '../bundler.js';
 import * as recipeService from '../api/recipe.js'
-import { parseQuerystring } from '../utils.js';
+import { createSubmitHandler, parseQuerystring } from '../utils.js';
 
-const catalogTemplate = (recipes, page, pageCount) => html`
+
+const catalogTemplate = (recipes, page, pageCount, searchHandler) => html`
 <section id="catalog">
     <div class="section-title">
-        <form id="searchForm">
-            <input type="text" name="search" value="">
+        <form @submit=${searchHandler} id="searchForm">
+            <input type="text" name="search" .value="">
             <input type="submit" value="Search">
         </form>
     </div>
@@ -36,14 +37,16 @@ const previewTempalte = (recipe) => html`
 `;
 
 export async function catalogPage(ctx) {
-
-    ctx.render(html`<p>Loading &hellip;</p>`)
-
+    ctx.render(html`<p>Loading &hellip;</p>`);
     const query = parseQuerystring(ctx.querystring);
     const page = Number(query.page) || 1;
-
     const {recipes, pageCount} = await recipeService.getAll(page);
+    ctx.render(catalogTemplate(recipes, page, pageCount, createSubmitHandler(ctx, searchHandler)));
+}
 
+async function searchHandler (ctx, data, e) {
+    const query = parseQuerystring(ctx.querystring);
+    const page = Number(query.page) || 1;
+    const {recipes, pageCount} = await recipeService.getAll(page, data.search);
     ctx.render(catalogTemplate(recipes, page, pageCount));
-
 }
