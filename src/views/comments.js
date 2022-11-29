@@ -13,17 +13,14 @@ const commentsList = (comments) => html`
     </ul>
 `;
 
-
 const commentParagraph = (comment) => html`
     <li class="comment">
         <header>peter@abv.bg</header>
-        <p>${comment.comment}</p>
+        <p>${comment.content}</p>
     </li>
 `;
 
-
-
-export async function commentsView (recipeId) {
+export async function commentsView(recipeId) {
     const comments = await recipeService.getByRecipeId(recipeId);
 
     return commentsTemplate(comments);

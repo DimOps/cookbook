@@ -40,7 +40,7 @@ export async function detailsPage(ctx) {
     const recipe = ctx.recipe;
 
     const commentsSection = await commentsView(recipe._id)
-    const commentFormSection = commentFormView(ctx, recipe._id)
+    const commentFormSection = commentFormView(ctx)
     
 
     ctx.render(detailsTemplate(recipe, commentFormSection, commentsSection, onDelete));
