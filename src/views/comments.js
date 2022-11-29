@@ -1,28 +1,33 @@
-import { html } from '../bundler.js';
+import { html, nothing } from '../bundler.js';
 import  * as recipeService from '../api/recipe.js';
 
-const commentsTemplate = (recipe, publisher) => html`
-<div>
-    <div class="section-title"> Comments for ${recipe.name} </div>
-    
-    <article class="new-comment">
-        <h2>New comment</h2>
-        <form @submit=${onSubmit} id="commentForm">
-            <textarea name="content" placeholder="Type comment"></textarea>
-            <input type="submit" value="Add comment">
-        </form>
-    </article>
-    
-    <div class="comments">
-        <ul>
-        <li class="comment">
-            <header>peter@abv.bg</header>
-            <p>Great recipe!</p>
-        </li>
-        </ul>
-    </div>
+const commentsTemplate = (comments) => html` 
+<div class="comments">
+    ${comments.length > 0 ? commentsList(comments) : nothing}
 </div>
 `;
+
+const commentsList = (comments) => html`
+    <ul>
+        ${comments.map(commentParagraph)}
+    </ul>
+`;
+
+
+const commentParagraph = (comment) => html`
+    <li class="comment">
+        <header>peter@abv.bg</header>
+        <p>${comment.comment}</p>
+    </li>
+`;
+
+
+
+export async function commentsView (recipeId) {
+    const comments = await recipeService.getByRecipeId(recipeId);
+
+    return commentsTemplate(comments);
+} 
 
 
 
