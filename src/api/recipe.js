@@ -11,6 +11,8 @@ const endpoints = {
     create: '/data/recipes',
     edit: '/data/recipes/',
     delete: '/data/recipes/',
+    commentsById: (recipeId) => `/data/comments?where=recipeId%3D%22${recipeId}%22`,
+    postComment: '/data/comments',
 }
 
 export async function getAll(page = 1, search) {
@@ -51,3 +53,12 @@ export async function editItem(id, data) {
 export async function deleteItem(id) {
     return api.del(endpoints.delete + id);
  } 
+
+ export async function getByRecipeId (recipeId) {
+    return api.get(endpoints.commentsById(recipeId));
+}
+
+export async function postComment (comment) {
+    return api.post(endpoints.postComment, comment);
+}
+
