@@ -1,8 +1,9 @@
 import { html, nothing } from '../bundler.js';
 import  * as recipeService from '../api/recipe.js';
 import { commentsView } from './comments.js';
+import { commentFormView } from './commentsForm.js';
 
-const detailsTemplate = (recipe, commentsSection, onDelete) => html`
+const detailsTemplate = (recipe, commentFormSection, commentsSection, onDelete) => html`
 <section id="details">
     <article>
         <h2>${recipe.name}</h2>
@@ -28,13 +29,7 @@ const detailsTemplate = (recipe, commentsSection, onDelete) => html`
     <div>
     <div class="section-title"> Comments for ${recipe.name} </div>
     
-    <article class="new-comment">
-        <h2>New comment</h2>
-        <form id="commentForm">
-            <textarea name="content" placeholder="Type comment"></textarea>
-            <input type="submit" value="Add comment">
-        </form>
-    </article>
+    ${commentFormSection}
     
     ${commentsSection}
 </div>
@@ -45,10 +40,10 @@ export async function detailsPage(ctx) {
     const recipe = ctx.recipe;
 
     const commentsSection = await commentsView(recipe._id)
-
+    const commentFormSection = commentFormView(ctx, recipe._id)
     
 
-    ctx.render(detailsTemplate(recipe, commentsSection, onDelete));
+    ctx.render(detailsTemplate(recipe, commentFormSection, commentsSection, onDelete));
 
     async function onDelete() {
         const choice = confirm('Are you sure you want to delete this?');
