@@ -38,10 +38,8 @@ const detailsTemplate = (recipe, commentFormSection, commentsSection, onDelete) 
 
 export async function detailsPage(ctx) {
     const recipe = ctx.recipe;
-  
     const commentsSection = await commentsView(recipe._id)
     const commentFormSection = commentFormView(ctx, recipe._isOwner)
-    
 
     ctx.render(detailsTemplate(recipe, commentFormSection, commentsSection, onDelete));
 

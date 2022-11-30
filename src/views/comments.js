@@ -15,15 +15,15 @@ const commentsList = (comments) => html`
 
 const commentParagraph = (comment) => html`
     <li class="comment">
-        <header>peter@abv.bg</header>
+        <header>${comment.author.username}</header>
         <p>${comment.content}</p>
     </li>
 `;
 
 export async function commentsView(recipeId) {
-    const comments = await recipeService.getByRecipeId(recipeId);
+    const commentsWithAuthor = await recipeService.getAuthor(recipeId)
 
-    return commentsTemplate(comments);
+    return commentsTemplate(commentsWithAuthor);
 } 
 
 
